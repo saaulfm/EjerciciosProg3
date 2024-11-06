@@ -138,6 +138,16 @@ public class JFramePrincipal extends JFrame {
 	            result.setHorizontalAlignment(JLabel.LEFT);
 	        }
 	        
+	        // TAREA 15: Cuando la tabla está vacía o se cargan personajes, usar el color de fondo de la tabla
+			if (isSelected || (table.equals(tablaPersonajes) && row == mouseRowPersonajes)) {
+				result.setBackground(table.getSelectionBackground()); // Usar color de selección
+				result.setForeground(table.getSelectionForeground());
+			} else {
+				// Si la celda está vacía o cuando se cargan personajes, usar el fondo de la tabla
+				result.setBackground(table.getBackground()); 
+				result.setForeground(table.getForeground()); // Colorear el texto según el color predeterminado
+			}
+	        
 	        // TAREA 4: Aplicar color de selección cuando la celda esté seleccionada
 	        if (isSelected) {
 	            result.setBackground(table.getSelectionBackground()); // Color de fondo de selección
