@@ -93,6 +93,12 @@ public class JFramePrincipal extends JFrame {
 	                default:
 	                    break;
 	            }
+	        } else if (value instanceof Number) {
+	            // TAREA 5: Alinear números al centro
+	            result.setHorizontalAlignment(JLabel.CENTER);
+	        } else {
+	            // TAREA 5: Alinear texto a la izquierda
+	            result.setHorizontalAlignment(JLabel.LEFT);
 	        }
 	        
 	        // TAREA 4: Aplicar color de selección cuando la celda esté seleccionada
@@ -113,8 +119,23 @@ public class JFramePrincipal extends JFrame {
 	        return result;
 	    };
 	    
-	    // Aplicar renderer de las TAREAS 1, 3 y 4
+	 // TAREA 5: Renderer para la cabecera, alineando columnas de texto a la izquierda y numéricas al centro
+	    TableCellRenderer headerRenderer = (table, value, isSelected, hasFocus, row, column) -> {
+	        JLabel header = new JLabel(value.toString());
+	        if ("ID".equals(value) || "EDITORIAL".equals(value)) {
+	            header.setHorizontalAlignment(JLabel.CENTER); // Alinear columnas numéricas al centro
+	        } else {
+	            header.setHorizontalAlignment(JLabel.LEFT); // Alinear texto a la izquierda
+	        }
+	        header.setOpaque(true);
+	        header.setBackground(table.getTableHeader().getBackground());
+	        header.setForeground(table.getTableHeader().getForeground());
+	        return header;
+	    };
+	    
+	    // Aplicar renderer de las TAREAS 1, 3, 4 y 5
 	    this.tablaComics.setDefaultRenderer(Object.class, cellRenderer);
+	    this.tablaComics.getTableHeader().setDefaultRenderer(headerRenderer);
 	    
 	    // TAREA 2: Modificar la altura de todas las filas de la tabla a 26 píxeles
 	    this.tablaComics.setRowHeight(26);
