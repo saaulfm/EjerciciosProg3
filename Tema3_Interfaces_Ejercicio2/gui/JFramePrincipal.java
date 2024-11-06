@@ -95,24 +95,25 @@ public class JFramePrincipal extends JFrame {
 	            }
 	        }
 	        
-	     // TAREA 3: Colorear filas pares e impares con colores específicos
-	        if (!isSelected) { // Aplicar solo si la celda no está seleccionada
+	        // TAREA 4: Aplicar color de selección cuando la celda esté seleccionada
+	        if (isSelected) {
+	            result.setBackground(table.getSelectionBackground()); // Color de fondo de selección
+	            result.setForeground(table.getSelectionForeground()); // Color de texto de selección
+	        } else {
+	            // TAREA 3: Colorear filas pares e impares con colores específicos
 	            if (row % 2 == 0) {
 	                result.setBackground(new Color(250, 249, 249)); // Color de fondo para filas pares
 	            } else {
 	                result.setBackground(new Color(190, 227, 219)); // Color de fondo para filas impares
 	            }
-	        } else {
-	            // Si la celda está seleccionada, usar el color de selección
-	            result.setBackground(table.getSelectionBackground());
-	            result.setForeground(table.getSelectionForeground());
+	            result.setForeground(table.getForeground()); // Color de texto normal
 	        }
-	        
+
 	        result.setOpaque(true);
 	        return result;
 	    };
 	    
-	    // Aplicar renderer de la TAREA 1, TAREA 2 y TAREA 3
+	    // Aplicar renderer de las TAREAS 1, 3 y 4
 	    this.tablaComics.setDefaultRenderer(Object.class, cellRenderer);
 	    
 	    // TAREA 2: Modificar la altura de todas las filas de la tabla a 26 píxeles
