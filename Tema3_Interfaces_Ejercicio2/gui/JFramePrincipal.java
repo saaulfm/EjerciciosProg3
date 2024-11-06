@@ -169,10 +169,10 @@ public class JFramePrincipal extends JFrame {
 	    this.tablaComics.setDefaultRenderer(Object.class, cellRenderer);
 	    this.tablaPersonajes.setDefaultRenderer(Object.class, cellRenderer);
 	    
-	    // TAREA 5: Renderer para la cabecera, alineando columnas de texto a la izquierda y numéricas al centro
+	    // TAREA 5 y TAREA 12: Renderer para la cabecera, alineando columnas de texto a la izquierda y numéricas al centro
 	    TableCellRenderer headerRenderer = (table, value, isSelected, hasFocus, row, column) -> {
 	        JLabel header = new JLabel(value.toString());
-	        if ("ID".equals(value) || "EDITORIAL".equals(value)) {
+	        if ("ID".equals(value) || "PERSONAJES".equals(value) || "EDITORIAL".equals(value)) {
 	            header.setHorizontalAlignment(JLabel.CENTER); // Alinear columnas numéricas al centro
 	        } else {
 	            header.setHorizontalAlignment(JLabel.LEFT); // Alinear texto a la izquierda
