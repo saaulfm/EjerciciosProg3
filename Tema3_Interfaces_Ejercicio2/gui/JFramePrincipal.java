@@ -222,6 +222,11 @@ public class JFramePrincipal extends JFrame {
 		this.tablaPersonajes.getColumnModel().getColumn(2).setPreferredWidth(200); // Columna "NOMBRE"
 		this.tablaPersonajes.getColumnModel().getColumn(3).setPreferredWidth(200); // Columna "EMAIL"
 		
+		// TAREA 14: Configurar un editor JComboBox para la columna "EDITORIAL" en tablaPersonajes
+		JComboBox<String> editorialComboBoxPersonajes = new JComboBox<>(new String[] {"DC", "MARVEL"});
+		DefaultCellEditor editorialEditorPersonajes = new DefaultCellEditor(editorialComboBoxPersonajes);
+		this.tablaPersonajes.getColumnModel().getColumn(1).setCellEditor(editorialEditorPersonajes); // Configurar la columna "EDITORIAL"
+		
 		// Aplicar renderer de la TAREA 1
 		this.tablaComics.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer de TAREA 1
 		//Se define el comportamiento el evento de selección de una fila de la tabla
