@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -142,6 +144,11 @@ public class JFramePrincipal extends JFrame {
 	    
 	    // TAREA 6: Redimensionar la columna "TÍTULO" a 400 píxeles
 	    this.tablaComics.getColumnModel().getColumn(2).setPreferredWidth(400);
+	    
+	    // TAREA 7: Editar la editorial a partir de un JComboBox
+	    JComboBox<Editorial> editorialComboBox = new JComboBox<>(Editorial.values());
+	    DefaultCellEditor editorialEditor = new DefaultCellEditor(editorialComboBox);
+	    this.tablaComics.getColumnModel().getColumn(1).setCellEditor(editorialEditor); // Configurar la columna "EDITORIAL" con el editor
 		
 		//Se modifica el modelo de selección de la tabla para que se pueda selecciona únicamente una fila
 		this.tablaComics.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
