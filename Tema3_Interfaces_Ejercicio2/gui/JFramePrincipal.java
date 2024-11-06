@@ -217,6 +217,11 @@ public class JFramePrincipal extends JFrame {
 	    // TAREA 10
 		this.tablaComics.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.tablaPersonajes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		// TAREA 13: Redimensionar las columnas "NOMBRE" y "EMAIL" en tablaPersonajes a 200 píxeles
+		this.tablaPersonajes.getColumnModel().getColumn(2).setPreferredWidth(200); // Columna "NOMBRE"
+		this.tablaPersonajes.getColumnModel().getColumn(3).setPreferredWidth(200); // Columna "EMAIL"
+		
 		// Aplicar renderer de la TAREA 1
 		this.tablaComics.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer de TAREA 1
 		//Se define el comportamiento el evento de selección de una fila de la tabla
