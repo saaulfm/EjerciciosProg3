@@ -64,6 +64,13 @@ public class JFramePrincipal extends JFrame {
 	}
 	
 	private void initTables() {
+		//Cabecera del modelo de datos
+		Vector<String> cabeceraComics = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "TÍTULO", "PERSONAJES"));
+		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
+		this.modeloDatosComics = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraComics);
+		//Se crea la tabla de comics con el modelo de datos
+		this.tablaComics = new JTable(this.modeloDatosComics);
+		
 		// TAREA 1: Renderizar la editorial como una imagen con el logo de DC o MARVEL y añadir el nombre como ToolTipText
 	    TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
 	        JLabel result = new JLabel(value != null ? value.toString() : "");
@@ -89,13 +96,10 @@ public class JFramePrincipal extends JFrame {
 	        result.setOpaque(true);
 	        return result;
 	    };
+	    
+	    // TAREA 2: Modificar la altura de todas las filas de la tabla a 26 píxeles
+	    this.tablaComics.setRowHeight(26);
 		
-		//Cabecera del modelo de datos
-		Vector<String> cabeceraComics = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "TÍTULO", "PERSONAJES"));
-		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
-		this.modeloDatosComics = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraComics);
-		//Se crea la tabla de comics con el modelo de datos
-		this.tablaComics = new JTable(this.modeloDatosComics);
 		//Se modifica el modelo de selección de la tabla para que se pueda selecciona únicamente una fila
 		this.tablaComics.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// Aplicar renderer de la TAREA 1
