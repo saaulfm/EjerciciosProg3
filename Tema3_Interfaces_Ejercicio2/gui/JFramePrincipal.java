@@ -75,6 +75,14 @@ public class JFramePrincipal extends JFrame {
 		//Se crea la tabla de comics con el modelo de datos
 		this.tablaComics = new JTable(this.modeloDatosComics);
 		
+		// *** CAMBIO DE SITIO de abajo a arriba ***
+		//Cabecera del modelo de datos
+		Vector<String> cabeceraPersonajes = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "NOMBRE", "EMAIL"));
+		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
+		this.modeloDatosPersonajes = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPersonajes);
+		 // Inicializar tablaPersonajes antes de usarla 
+	    this.tablaPersonajes = new JTable(this.modeloDatosPersonajes);  // Inicialización de tablaPersonajes antes de usarla
+		
 		// TAREA 1: Renderizar la editorial como una imagen con el logo de DC o MARVEL y añadir el nombre como ToolTipText
 	    TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
 	        JLabel result = new JLabel(value != null ? value.toString() : "");
@@ -123,7 +131,9 @@ public class JFramePrincipal extends JFrame {
 	    };
 	    
 	    // *** TAREA 1 y TAREA 9: Renderizar la editorial como una imagen con el logo de DC o MARVEL y añadir el nombre como ToolTipText ***
-	    this.tablaComics.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer para los datos de la tabla de Comics
+	    // Aplicar renderer para los datos de la tabla de Personajes y Comics
+	    this.tablaComics.setDefaultRenderer(Object.class, cellRenderer);
+	    this.tablaPersonajes.setDefaultRenderer(Object.class, cellRenderer);
 	    
 	    // TAREA 5: Renderer para la cabecera, alineando columnas de texto a la izquierda y numéricas al centro
 	    TableCellRenderer headerRenderer = (table, value, isSelected, hasFocus, row, column) -> {
@@ -140,10 +150,15 @@ public class JFramePrincipal extends JFrame {
 	    };
 	    
 	    // Aplicar renderer de las TAREAS 1, 3, 4 y 5
+	    // Aplicar tambien renderer de la TAREA 10
 	    this.tablaComics.getTableHeader().setDefaultRenderer(headerRenderer);
-	    
+	    this.tablaPersonajes.getTableHeader().setDefaultRenderer(headerRenderer);
+
 	    // TAREA 2: Modificar la altura de todas las filas de la tabla a 26 píxeles
 	    this.tablaComics.setRowHeight(26);
+	    
+	    // TAREA 10: Modificar la altura de todas las filas de la tabla de personajes a 26 píxeles
+	    this.tablaPersonajes.setRowHeight(26);
 	    
 	    // TAREA 6: Redimensionar la columna "TÍTULO" a 400 píxeles
 	    this.tablaComics.getColumnModel().getColumn(2).setPreferredWidth(400);
@@ -165,7 +180,9 @@ public class JFramePrincipal extends JFrame {
 //	    this.tablaComics.getColumnModel().getColumn(2).setCellEditor(numericEditor); // También a "TÍTULO" si es numérico o requiere formato numérico
 		
 		//Se modifica el modelo de selección de la tabla para que se pueda selecciona únicamente una fila
+	    // TAREA 10
 		this.tablaComics.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.tablaPersonajes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// Aplicar renderer de la TAREA 1
 		this.tablaComics.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer de TAREA 1
 		//Se define el comportamiento el evento de selección de una fila de la tabla
@@ -173,17 +190,6 @@ public class JFramePrincipal extends JFrame {
 			//Cuando se selecciona una fila, se actualiza la tabla de personajes
 			this.loadPersonajes(this.comics.get((int)tablaComics.getValueAt(tablaComics.getSelectedRow(), 0)-1));
 		});
-		
-		//Cabecera del modelo de datos
-		Vector<String> cabeceraPersonajes = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "NOMBRE", "EMAIL"));
-		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
-		this.modeloDatosPersonajes = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPersonajes);
-		
-		 // Inicializar tablaPersonajes antes de usarla 
-	    this.tablaPersonajes = new JTable(this.modeloDatosPersonajes);  // Inicialización de tablaPersonajes antes de usarla
-
-	    // Ahora puedes usar la tablaPersonajes después de haberla inicializado 
-	    this.tablaPersonajes.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer para los datos de la tabla de Personajes
 	}
 	
 	private void loadComics() {
