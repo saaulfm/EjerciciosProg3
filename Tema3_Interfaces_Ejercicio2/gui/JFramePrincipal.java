@@ -5,15 +5,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import domain.Comic;
+import domain.Personaje.Editorial;
 
 public class JFramePrincipal extends JFrame {
 
@@ -60,6 +64,32 @@ public class JFramePrincipal extends JFrame {
 	}
 	
 	private void initTables() {
+		// TAREA 1: Renderizar la editorial como una imagen con el logo de DC o MARVEL y añadir el nombre como ToolTipText
+	    TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
+	        JLabel result = new JLabel(value != null ? value.toString() : "");
+
+	        if (value instanceof Editorial) {
+	            Editorial e = (Editorial) value;
+	            result.setText("");
+	            result.setToolTipText(e.toString()); // ToolTip con el nombre de la editorial
+	            result.setHorizontalAlignment(JLabel.CENTER);
+
+	            // Colocar imagen según la editorial
+	            switch (e) {
+	                case MARVEL:
+	                    result.setIcon(new ImageIcon("images/MARVEL.png"));
+	                    break;
+	                case DC:
+	                    result.setIcon(new ImageIcon("images/DC.png"));
+	                    break;
+	                default:
+	                    break;
+	            }
+	        }
+	        result.setOpaque(true);
+	        return result;
+	    };
+		
 		//Cabecera del modelo de datos
 		Vector<String> cabeceraComics = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "TÍTULO", "PERSONAJES"));
 		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
@@ -68,6 +98,8 @@ public class JFramePrincipal extends JFrame {
 		this.tablaComics = new JTable(this.modeloDatosComics);
 		//Se modifica el modelo de selección de la tabla para que se pueda selecciona únicamente una fila
 		this.tablaComics.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// Aplicar renderer de la TAREA 1
+		this.tablaComics.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer de TAREA 1
 		//Se define el comportamiento el evento de selección de una fila de la tabla
 		this.tablaComics.getSelectionModel().addListSelectionListener(e -> {
 			//Cuando se selecciona una fila, se actualiza la tabla de personajes
