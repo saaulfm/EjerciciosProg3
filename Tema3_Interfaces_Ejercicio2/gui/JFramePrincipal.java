@@ -2,6 +2,9 @@ package gui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -28,6 +31,8 @@ public class JFramePrincipal extends JFrame {
 	private static final long serialVersionUID = 1L;
 		
 	private List<Comic> comics;
+	private int mouseRowPersonajes = -1; // TAREA 11
+
 	
 	private JTable tablaComics;
 	private DefaultTableModel modeloDatosComics;
@@ -53,6 +58,27 @@ public class JFramePrincipal extends JFrame {
 		this.scrollPanePersonajes = new JScrollPane(this.tablaPersonajes);
 		this.scrollPanePersonajes.setBorder(new TitledBorder("Personajes"));		
 		this.tablaPersonajes.setFillsViewportHeight(true);
+		
+		// *** Se define el listener para detectar cuando el ratón sale de la tabla de personajes ***
+		this.tablaPersonajes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				//Se resetea la fila/columna sobre la que está el ratón				
+				mouseRowPersonajes = -1;
+			}
+		});
+		
+		// *** Se define el listener para controlar el movimiento del ratón sobre la tabla de personajes ***
+		this.tablaPersonajes.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				//Se actualiza la fila/columna sobre la que está el ratón
+				mouseRowPersonajes = tablaPersonajes.rowAtPoint(e.getPoint());
+						
+				//Se provoca el redibujado de la tabla
+				tablaPersonajes.repaint();
+			}			
+		});
 		
 		//El Layout del panel principal es un matriz con 2 filas y 1 columna
 		this.getContentPane().setLayout(new GridLayout(2, 1));
@@ -118,12 +144,20 @@ public class JFramePrincipal extends JFrame {
 	            result.setForeground(table.getSelectionForeground()); // Color de texto de selección
 	        } else {
 	            // TAREA 3: Colorear filas pares e impares con colores específicos
-	            if (row % 2 == 0) {
-	                result.setBackground(new Color(250, 249, 249)); // Color de fondo para filas pares
-	            } else {
-	                result.setBackground(new Color(190, 227, 219)); // Color de fondo para filas impares
-	            }
-	            result.setForeground(table.getForeground()); // Color de texto normal
+	        	// TAREA 11: Renderizar las celdas seleccionadas con el color de renderizado por defecto.
+				if (table.equals(tablaComics)) {
+					if (row % 2 == 0) {
+						result.setBackground(new Color(250, 249, 249));
+					} else {
+						result.setBackground(new Color(190, 227, 219));
+					}
+				}			
+				
+				//Si la celda está seleccionada se renderiza con el color de selección por defecto
+				if (isSelected || (table.equals(tablaPersonajes) && row == mouseRowPersonajes)) {
+					result.setBackground(table.getSelectionBackground());
+					result.setForeground(table.getSelectionForeground());			
+				}
 	        }
 
 	        result.setOpaque(true);
