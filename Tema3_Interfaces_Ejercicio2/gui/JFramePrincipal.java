@@ -139,6 +139,9 @@ public class JFramePrincipal extends JFrame {
 	    
 	    // TAREA 2: Modificar la altura de todas las filas de la tabla a 26 píxeles
 	    this.tablaComics.setRowHeight(26);
+	    
+	    // TAREA 6: Redimensionar la columna "TÍTULO" a 400 píxeles
+	    this.tablaComics.getColumnModel().getColumn(2).setPreferredWidth(400);
 		
 		//Se modifica el modelo de selección de la tabla para que se pueda selecciona únicamente una fila
 		this.tablaComics.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
