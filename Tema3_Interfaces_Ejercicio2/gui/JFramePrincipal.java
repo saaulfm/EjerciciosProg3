@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+//import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
@@ -121,7 +122,7 @@ public class JFramePrincipal extends JFrame {
 	        return result;
 	    };
 	    
-	 // TAREA 5: Renderer para la cabecera, alineando columnas de texto a la izquierda y numéricas al centro
+	    // TAREA 5: Renderer para la cabecera, alineando columnas de texto a la izquierda y numéricas al centro
 	    TableCellRenderer headerRenderer = (table, value, isSelected, hasFocus, row, column) -> {
 	        JLabel header = new JLabel(value.toString());
 	        if ("ID".equals(value) || "EDITORIAL".equals(value)) {
@@ -136,7 +137,6 @@ public class JFramePrincipal extends JFrame {
 	    };
 	    
 	    // Aplicar renderer de las TAREAS 1, 3, 4 y 5
-	    this.tablaComics.setDefaultRenderer(Object.class, cellRenderer);
 	    this.tablaComics.getTableHeader().setDefaultRenderer(headerRenderer);
 	    
 	    // TAREA 2: Modificar la altura de todas las filas de la tabla a 26 píxeles
@@ -149,6 +149,17 @@ public class JFramePrincipal extends JFrame {
 	    JComboBox<Editorial> editorialComboBox = new JComboBox<>(Editorial.values());
 	    DefaultCellEditor editorialEditor = new DefaultCellEditor(editorialComboBox);
 	    this.tablaComics.getColumnModel().getColumn(1).setCellEditor(editorialEditor); // Configurar la columna "EDITORIAL" con el editor
+	    
+//	    // TAREA 8: Alinear los valores numéricos al centro
+//	    JTextField textField = new JTextField();
+//	    textField.setHorizontalAlignment(JTextField.CENTER); // Alinear texto al centro
+//
+//	    // Usamos DefaultCellEditor para permitir la edición
+//	    DefaultCellEditor numericEditor = new DefaultCellEditor(textField);
+//
+//	    // Asignar el editor numérico a las columnas que contienen valores numéricos
+//	    this.tablaComics.getColumnModel().getColumn(0).setCellEditor(numericEditor); // Asignado a la columna ID, por ejemplo, si es numérica
+//	    this.tablaComics.getColumnModel().getColumn(2).setCellEditor(numericEditor); // También a "TÍTULO" si es numérico o requiere formato numérico
 		
 		//Se modifica el modelo de selección de la tabla para que se pueda selecciona únicamente una fila
 		this.tablaComics.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
