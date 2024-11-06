@@ -122,6 +122,9 @@ public class JFramePrincipal extends JFrame {
 	        return result;
 	    };
 	    
+	    // *** TAREA 1 y TAREA 9: Renderizar la editorial como una imagen con el logo de DC o MARVEL y añadir el nombre como ToolTipText ***
+	    this.tablaComics.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer para los datos de la tabla de Comics
+	    
 	    // TAREA 5: Renderer para la cabecera, alineando columnas de texto a la izquierda y numéricas al centro
 	    TableCellRenderer headerRenderer = (table, value, isSelected, hasFocus, row, column) -> {
 	        JLabel header = new JLabel(value.toString());
@@ -175,8 +178,12 @@ public class JFramePrincipal extends JFrame {
 		Vector<String> cabeceraPersonajes = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "NOMBRE", "EMAIL"));
 		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
 		this.modeloDatosPersonajes = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPersonajes);
-		//Se crea la tabla de personajes con el modelo de datos
-		this.tablaPersonajes = new JTable(this.modeloDatosPersonajes);
+		
+		 // Inicializar tablaPersonajes antes de usarla 
+	    this.tablaPersonajes = new JTable(this.modeloDatosPersonajes);  // Inicialización de tablaPersonajes antes de usarla
+
+	    // Ahora puedes usar la tablaPersonajes después de haberla inicializado 
+	    this.tablaPersonajes.setDefaultRenderer(Object.class, cellRenderer); // Aplicar renderer para los datos de la tabla de Personajes
 	}
 	
 	private void loadComics() {
