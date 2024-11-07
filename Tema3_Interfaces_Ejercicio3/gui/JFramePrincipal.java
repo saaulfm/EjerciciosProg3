@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -58,7 +60,25 @@ public class JFramePrincipal extends JFrame {
 		this.tablaPersonajes.setFillsViewportHeight(true);
 				
 		//Se define el comportamiento del campo de texto del filtro
-		this.txtFiltro = new JTextField(20);		
+		this.txtFiltro = new JTextField(20);
+		
+		// TAREA 3.1: Se añade un listener para detectar cambios en el campo de texto
+		// Implementar un DocumentListener y añadirlo al JTextfield.getDocument().addDocumentListener()
+		this.txtFiltro.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				filtrarComics();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				filtrarComics();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) { }			
+		});
+				
 		JPanel panelFiltro = new JPanel();
 		panelFiltro.add(new JLabel("Filtro por título: "));
 		panelFiltro.add(txtFiltro);
@@ -98,6 +118,24 @@ public class JFramePrincipal extends JFrame {
 		//Se crea la tabla de comics con el modelo de datos
 		this.tablaComics = new JTable(this.modeloDatosComics);
 		
+		// *** CAMBIO DE SITIO de abajo a arriba ***
+		//Cabecera del modelo de datos
+		Vector<String> cabeceraPersonajes = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "NOMBRE", "EMAIL"));
+		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
+		this.modeloDatosPersonajes = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPersonajes) {
+			private static final long serialVersionUID = 1L;
+					
+			// TAREA 2: Bloquear la edición de todas las columnas en la tabla de Personajes
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}	
+		};
+				
+		//Se crea la tabla de personajes con el modelo de datos
+		this.tablaPersonajes = new JTable(this.modeloDatosPersonajes);
+		
+		
 		//Se define un CellRenderer para las celdas de las dos tabla usando una expresión lambda
 		TableCellRenderer cellRenderer = (table, value, isSelected, hasFocus, row, column) -> {
 			JLabel result = new JLabel(value.toString());
@@ -129,8 +167,29 @@ public class JFramePrincipal extends JFrame {
 					result.setHorizontalAlignment(JLabel.CENTER);				
 				} catch(Exception ex) {
 					result.setText(value.toString());
-				}		
-			}
+				}
+				// TAREA 3.2: Resaltar el texto del filtro en la columna "Título"
+				if (table.equals(tablaComics)) {
+					String filter = txtFiltro.getText();
+					String txtValue = value.toString();
+					StringBuffer txtHtml = new StringBuffer();						
+					String txtResaltado;
+					
+					if (isSelected) {
+						txtResaltado = "<strong style='background-color:white; color: red;'>" + filter + "</strong>";
+					} else {
+						txtResaltado = "<strong style='background-color:yellow; color: blue;'>" + filter + "</strong>";
+					}
+											
+					txtHtml.append("<html>");
+					txtHtml.append(txtValue.substring(0, txtValue.indexOf(filter)));
+					txtHtml.append(txtResaltado);
+					txtHtml.append(txtValue.substring(txtValue.indexOf(filter) + filter.length(), txtValue.length()));
+					txtHtml.append("</html");
+					
+					result.setText(txtHtml.toString());
+				}
+			}		
 			
 			//La filas pares e impares se renderizan de colores diferentes de la tabla de comics			
 			if (table.equals(tablaComics)) {
@@ -210,22 +269,6 @@ public class JFramePrincipal extends JFrame {
 				this.loadPersonajes(this.comics.get((int) tablaComics.getValueAt(tablaComics.getSelectedRow(), 0) - 1));
 			}
 		});
-		
-		//Cabecera del modelo de datos
-		Vector<String> cabeceraPersonajes = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "NOMBRE", "EMAIL"));
-		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
-		this.modeloDatosPersonajes = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPersonajes) {
-			private static final long serialVersionUID = 1L;
-			
-			// TAREA 2: Bloquear la edición de todas las columnas en la tabla de Personajes
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}	
-		};
-		
-		//Se crea la tabla de personajes con el modelo de datos
-		this.tablaPersonajes = new JTable(this.modeloDatosPersonajes);
 				
 		//Se deshabilita la reordenación de columnas
 		this.tablaPersonajes.getTableHeader().setReorderingAllowed(false);
@@ -240,7 +283,24 @@ public class JFramePrincipal extends JFrame {
 		this.tablaPersonajes.getColumnModel().getColumn(2).setPreferredWidth(200);
 		this.tablaPersonajes.getColumnModel().getColumn(3).setPreferredWidth(200);
 	}
+	
+	// TAREA 3: Filtra la tabla de comics a partir del valor que se introduzca en la caja de texto. 
+	// A medida que se va introduciendo texto, los comics que aparezcen en la tabla deben incluir el texto del filtro en su título. 
+	// Si no hay texto, aparecerán todos los comics. 
+	private void filtrarComics() {
+		//Se vacían las dos tablas
+		this.modeloDatosComics.setRowCount(0);
+		this.modeloDatosPersonajes.setRowCount(0);
 		
+		//Se añaden a la tabla sólo los comics que contengan el texto del filtro
+		this.comics.forEach(c -> {
+			if (c.getTitulo().contains(this.txtFiltro.getText())) {
+				this.modeloDatosComics.addRow(
+					new Object[] {c.getId(), c.getEditorial(), c.getTitulo(), c.getPersonajes().size()} );
+			}
+		});
+	}
+	
 	private void loadComics() {
 		//Se borran los datos del modelo de datos
 		this.modeloDatosComics.setRowCount(0);
