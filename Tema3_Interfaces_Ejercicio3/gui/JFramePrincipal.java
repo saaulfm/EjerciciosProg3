@@ -3,6 +3,9 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -32,6 +35,7 @@ public class JFramePrincipal extends JFrame {
 	private static final long serialVersionUID = 1L;
 		
 	private List<Comic> comics;
+	private int mouseRowPersonajes = -1; // TAREA 4.1
 	
 	private JTable tablaComics;
 	private DefaultTableModel modeloDatosComics;
@@ -88,6 +92,26 @@ public class JFramePrincipal extends JFrame {
 		panelComics.add(BorderLayout.CENTER, scrollPaneComics);
 		panelComics.add(BorderLayout.NORTH, panelFiltro);
 				
+		// TAREA 4.2: MouseMotionAdapter para detectar los movimientos del ratón sobre la tabla de personajes
+		this.tablaPersonajes.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// TAREA 4.2: Actualizar la fila sobre la que está el ratón
+				mouseRowPersonajes = tablaPersonajes.rowAtPoint(e.getPoint());
+				// Forzar el redibujado de la tabla
+				tablaPersonajes.repaint(); // TAREA 4.6
+			}			
+		});
+				
+		// TAREA 4.3: MouseAdapter para detectar cuando el ratón sale de la tabla de personajes
+		this.tablaPersonajes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// Cuando el ratón sale de la tabla, se resetea la fila a -1
+				mouseRowPersonajes = -1;
+			}
+		});
+		
 		//El Layout del panel principal es un matriz con 2 filas y 1 columna
 		this.getContentPane().setLayout(new GridLayout(2, 1));
 		this.getContentPane().add(panelComics);
@@ -168,6 +192,15 @@ public class JFramePrincipal extends JFrame {
 				} catch(Exception ex) {
 					result.setText(value.toString());
 				}
+				// TAREA 4.5: Resaltar la fila cuando la fila del ratón es igual a la fila actual
+				if (table.equals(tablaPersonajes)) {
+					if (row == mouseRowPersonajes) { 
+						result.setBackground(new Color(220, 220, 220)); // Resaltar fila
+					} else {
+						result.setBackground(table.getBackground());
+					}
+				}
+				
 				// TAREA 3.2: Resaltar el texto del filtro en la columna "Título"
 				if (table.equals(tablaComics)) {
 					String filter = txtFiltro.getText();
@@ -203,6 +236,12 @@ public class JFramePrincipal extends JFrame {
 				result.setBackground(table.getBackground());
 				result.setForeground(table.getForeground());
 			}
+			
+			// tarea 4.5: Si la fila es igual a la fila sobre la que está el ratón, se cambia el color de fondo
+		    if (row == mouseRowPersonajes) {
+		        result.setBackground(table.getSelectionBackground());
+		        result.setForeground(table.getSelectionForeground());
+		    }
 			
 			//Si la celda está seleccionada se renderiza con el color de selección por defecto
 			if (isSelected) {
