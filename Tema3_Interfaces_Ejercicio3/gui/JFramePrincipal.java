@@ -214,7 +214,16 @@ public class JFramePrincipal extends JFrame {
 		//Cabecera del modelo de datos
 		Vector<String> cabeceraPersonajes = new Vector<String>(Arrays.asList( "ID", "EDITORIAL", "NOMBRE", "EMAIL"));
 		//Se crea el modelo de datos para la tabla de comics sólo con la cabecera
-		this.modeloDatosPersonajes = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPersonajes);
+		this.modeloDatosPersonajes = new DefaultTableModel(new Vector<Vector<Object>>(), cabeceraPersonajes) {
+			private static final long serialVersionUID = 1L;
+			
+			// TAREA 2: Bloquear la edición de todas las columnas en la tabla de Personajes
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}	
+		};
+		
 		//Se crea la tabla de personajes con el modelo de datos
 		this.tablaPersonajes = new JTable(this.modeloDatosPersonajes);
 				
