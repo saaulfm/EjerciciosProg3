@@ -193,8 +193,11 @@ public class JFramePrincipal extends JFrame {
 						JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.PLAIN_MESSAGE);
 				
+				// TAREA 7.1: Verificar si se pulsó OK
 				if (result == JOptionPane.OK_OPTION) {
+					// TAREA 7.2: Crear el nuevo comic
 					if (!txtTitulo.getText().isEmpty()) {
+						// TAREA 7.3: Añadir el comic a la lista
 						Comic comic = new Comic(comics.size()+1, (Editorial) jcomoEditorial.getSelectedItem(), txtTitulo.getText());
 						comics.add(comic);
 						//Se borra el filtro
