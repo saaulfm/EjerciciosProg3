@@ -3,9 +3,12 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -13,8 +16,10 @@ import java.util.Vector;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +33,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import domain.Comic;
+import domain.Personaje;
 import domain.Personaje.Editorial;
 
 public class JFramePrincipal extends JFrame {
@@ -46,7 +52,7 @@ public class JFramePrincipal extends JFrame {
 	
 	public JFramePrincipal(List<Comic> comics) {
 		//Asignamos la lista de comics a la varaible local
-		this.comics = comics;
+		this.comics = new ArrayList<>(comics); // *Convertimos la lista inmutable en mutable (TAREA 5)
 
 		//Se inicializan las tablas y sus modelos de datos
 		this.initTables();
@@ -90,7 +96,7 @@ public class JFramePrincipal extends JFrame {
 		JPanel panelComics = new JPanel();
 		panelComics.setLayout(new BorderLayout());
 		panelComics.add(BorderLayout.CENTER, scrollPaneComics);
-		panelComics.add(BorderLayout.NORTH, panelFiltro);
+		panelComics.add(BorderLayout.NORTH, panelFiltro);	
 				
 		// TAREA 4.2: MouseMotionAdapter para detectar los movimientos del ratón sobre la tabla de personajes
 		this.tablaPersonajes.addMouseMotionListener(new MouseMotionAdapter() {
@@ -112,6 +118,15 @@ public class JFramePrincipal extends JFrame {
 			}
 		});
 		
+		// TAREA 5
+		// Añadir los listeners
+		this.tablaPersonajes.addKeyListener(myKeyListener);
+		this.tablaComics.addKeyListener(myKeyListener);
+		this.txtFiltro.addKeyListener(myKeyListener);
+		
+		this.tablaPersonajes.addKeyListener(myKeyListener);
+		this.tablaComics.addKeyListener(myKeyListener);
+		
 		//El Layout del panel principal es un matriz con 2 filas y 1 columna
 		this.getContentPane().setLayout(new GridLayout(2, 1));
 		this.getContentPane().add(panelComics);
@@ -124,6 +139,78 @@ public class JFramePrincipal extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);		
 	}
+	
+	// Listener para los eventos de teclado
+	KeyListener myKeyListener = new KeyListener() {
+		@Override
+		public void keyTyped(KeyEvent e) { }
+
+		// TAREA 5: Al pulsar la combinación de teclas CTRL + C, abre un cuadro de diálogo para añadir un nuevo comic
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// CTRL + C - Creación de un nuevo comic
+			if (e.getKeyCode() == KeyEvent.VK_C && e.isControlDown()) {
+				//Se inicializa el JComboBox para seleccionar la editorial
+				JComboBox<Editorial> jcomoEditorial = new JComboBox<>(Editorial.values());				
+				jcomoEditorial.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+					JLabel result = new JLabel();
+						
+					Editorial editorial = (Editorial) value;
+					
+					switch (editorial) { 
+						case MARVEL:
+							result.setIcon(new ImageIcon(getClass().getResource("/images/MARVEL.png")));
+							break;
+						case DC:
+							result.setIcon(new ImageIcon(getClass().getResource("/images/DC.png")));
+							break;
+						default:
+					}
+					
+					if (isSelected) {
+						result.setBackground(list.getSelectionBackground());
+						result.setForeground(list.getSelectionForeground());
+					}
+					
+					return result;
+				});
+				
+				//Se define el JTextField para el título
+				JTextField txtTitulo = new JTextField(30);
+				
+				//En este array de JComponent se definen los componentes que se 
+				//muestran en el cuadro de diálogo.
+				JComponent[] inputs = new JComponent[] {
+					new JLabel("Editorial: "),
+					jcomoEditorial,
+					new JLabel("Título: "),
+					txtTitulo
+				};	
+						
+						
+				int result = JOptionPane.showConfirmDialog(null, inputs, 
+						"Crear un nuevo comic", 
+						JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.PLAIN_MESSAGE);
+				
+				if (result == JOptionPane.OK_OPTION) {
+					if (!txtTitulo.getText().isEmpty()) {
+						Comic comic = new Comic(comics.size()+1, (Editorial) jcomoEditorial.getSelectedItem(), txtTitulo.getText());
+						comics.add(comic);
+						//Se borra el filtro
+						txtFiltro.setText("");
+						//Se cargan de nuevo los comics
+						loadComics();
+					} else {
+						JOptionPane.showMessageDialog(null, "El título no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+					}						
+				}
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) { }
+	};	
 	
 	private void initTables() {
 		//Cabecera del modelo de datos
