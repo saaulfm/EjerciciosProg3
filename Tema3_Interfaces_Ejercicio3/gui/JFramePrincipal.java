@@ -150,8 +150,9 @@ public class JFramePrincipal extends JFrame {
 		public void keyPressed(KeyEvent e) {
 			// CTRL + C - Creación de un nuevo comic
 			if (e.getKeyCode() == KeyEvent.VK_C && e.isControlDown()) {
-				//Se inicializa el JComboBox para seleccionar la editorial
-				JComboBox<Editorial> jcomoEditorial = new JComboBox<>(Editorial.values());				
+                // TAREA 6.1: Crear JComboBox para seleccionar la editorial
+				JComboBox<Editorial> jcomoEditorial = new JComboBox<>(Editorial.values());
+                // TAREA 6.2: Personalizar el JComboBox para mostrar imágenes de las editoriales
 				jcomoEditorial.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
 					JLabel result = new JLabel();
 						
