@@ -179,8 +179,7 @@ public class JFramePrincipal extends JFrame {
 				//Se define el JTextField para el título
 				JTextField txtTitulo = new JTextField(30);
 				
-				//En este array de JComponent se definen los componentes que se 
-				//muestran en el cuadro de diálogo.
+				// TAREA 6.1: Personalizar el cuadro de diálogo con componentes
 				JComponent[] inputs = new JComponent[] {
 					new JLabel("Editorial: "),
 					jcomoEditorial,
