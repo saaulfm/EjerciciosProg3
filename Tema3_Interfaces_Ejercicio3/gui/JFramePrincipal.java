@@ -224,6 +224,7 @@ public class JFramePrincipal extends JFrame {
 					});		
 				});					
 				
+		        // TAREA 9: Después de cerrar el cuadro de diálogo, actualizar las tablas de cómics y personajes
 				//Se crea el cuadro de diálogo de modificación de personajes.
 				new JDialogPersonajes(personajes, comic);
 				
