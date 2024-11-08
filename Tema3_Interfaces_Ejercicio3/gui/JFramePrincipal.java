@@ -208,6 +208,32 @@ public class JFramePrincipal extends JFrame {
 						JOptionPane.showMessageDialog(null, "El título no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
 					}						
 				}
+			// TAREA 8: Si está seleccionado un comic en la tabla de comics y se pulsa la combinación de teclas  CTRL + P se abre un cuadro de diálogo para añadir personajes al comic.	
+			} else if (tablaComics.getSelectedRow() != -1 && e.getKeyCode() == KeyEvent.VK_P && e.isControlDown()) {					
+				Comic comic = comics.get((int) tablaComics.getValueAt(tablaComics.getSelectedRow(), 0) - 1);
+				List<Personaje> personajes = new ArrayList<>();
+				
+				//Se recorren todos los comics
+				comics.forEach(c -> {
+					//Se recorren todos los personajes del comic
+					c.getPersonajes().forEach(p -> {
+						//Se añaden a la lista de personajes sin repetición
+						if (!personajes.contains(p) && !comic.getPersonajes().contains(p)) {
+							personajes.add(p);
+						}
+					});		
+				});					
+				
+				//Se crea el cuadro de diálogo de modificación de personajes.
+				new JDialogPersonajes(personajes, comic);
+				
+				//Se borra el filtro
+				txtFiltro.setText("");
+				//Se cargan de nuevo los comics para actualizar el número de personajes
+				loadComics();
+									
+				//Se carga de nuevo la tabla de personajes
+				loadPersonajes(comic);
 			}
 		}
 
