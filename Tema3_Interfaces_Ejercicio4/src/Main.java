@@ -20,6 +20,12 @@ public class Main {
 						
 			Map<String, List<RocketLaunch>> launchesMap = new HashMap<>();
 			
+			// TAREA 1: Inicializa el mapa de lanzaminetos por compañía
+			launches.forEach(l -> {
+				launchesMap.putIfAbsent(l.getCompany(), new ArrayList<>());				
+				launchesMap.get(l.getCompany()).add(l);
+			});
+
 			SwingUtilities.invokeLater(() -> new JFrameLanzamientos(launchesMap));			
 		} catch (Exception ex) {
 			System.err.println();
