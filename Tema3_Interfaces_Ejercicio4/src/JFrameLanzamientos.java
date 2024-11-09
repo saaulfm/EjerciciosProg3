@@ -8,6 +8,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.border.TitledBorder;
 
+import domain.RocketLaunch;
+
 public class JFrameLanzamientos extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
