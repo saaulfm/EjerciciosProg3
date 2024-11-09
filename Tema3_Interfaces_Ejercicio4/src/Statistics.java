@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import CountryLaunches;
-import RocketLaunch;
-import RocketLaunch.Status;
+import domain.CountryLaunches;
+import domain.RocketLaunch;
+import domain.RocketLaunch.Status;
 
 public class Statistics {
 
